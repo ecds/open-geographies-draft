@@ -8,7 +8,18 @@ be read alongside the lower-layer engine,
 [`ecds/core-data-connector-open-geographies`](https://github.com/ecds/core-data-connector-open-geographies/tree/v1)
 (branch `v1`).
 
-Code lives in separate repositories; this repo is documents and schema artifacts only.
+The platform-side code is included as snapshots so it can be read alongside the documents:
+
+- `engine/` — the `open_geographies` Rails engine (the upper layer: wizard backend, provisioning,
+  Site config/branding/navigation, authority imports, the by-slug public atlas API). Installs
+  onto unmodified Core Data / FairData and depends on the lower-layer engine above.
+- `renderer/` — the shared multi-tenant SSR renderer, a fork of Performant Software's
+  [`core-data-places`](https://github.com/performant-software/core-data-places) (Astro + Node).
+  Renders any atlas by slug at request time; includes the in-progress Elasticsearch/Searchkit
+  search path alongside the original Typesense one.
+
+These are working-tree snapshots, not the repositories' histories; they will move to their own
+repositories once the code stabilizes.
 
 ## Start here
 

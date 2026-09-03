@@ -1,0 +1,502 @@
+{
+  "explore": {
+    "tinaLabel": "Explore",
+    "defaultValue": "Explore"
+  },
+  "home": {
+    "tinaLabel": "Home",
+    "defaultValue": "Home"
+  },
+  "about": {
+    "tinaLabel": "About",
+    "defaultValue": "About"
+  },
+  "pages": {
+    "tinaLabel": "Pages",
+    "defaultValue": "Pages"
+  },
+  "paths": {
+    "tinaLabel": "Paths",
+    "defaultValue": "Paths"
+  },
+  "posts": {
+    "tinaLabel": "Posts",
+    "defaultValue": "Posts"
+  },
+  "all": {
+    "tinaLabel": "All",
+    "defaultValue": "All"
+  },
+  "loading": {
+    "tinaLabel": "Loading",
+    "defaultValue": "Loading"
+  },
+  "backTo": {
+    "tinaLabel": "Back to <label>",
+    "defaultValue": "Back to {{label}}"
+  },
+  "by": {
+    "tinaLabel": "by <author>",
+    "defaultValue": "by {{author}}"
+  },
+  "openMainMenu": {
+    "tinaLabel": "Open Main Menu",
+    "defaultValue": "Open Main Menu"
+  },
+  "untitled": {
+    "tinaLabel": "Untitled",
+    "defaultValue": "Untitled"
+  },
+  "mapLayers": {
+    "tinaLabel": "Map Layers",
+    "defaultValue": "Map Layers"
+  },
+  "events": {
+    "tinaLabel": "Events",
+    "defaultValue": "Events"
+  },
+  "instances": {
+    "tinaLabel": "Instances",
+    "defaultValue": "Instances"
+  },
+  "items": {
+    "tinaLabel": "Items",
+    "defaultValue": "Items"
+  },
+  "organizations": {
+    "tinaLabel": "Organizations",
+    "defaultValue": "Organizations"
+  },
+  "people": {
+    "tinaLabel": "People",
+    "defaultValue": "People"
+  },
+  "places": {
+    "tinaLabel": "Places",
+    "defaultValue": "Places"
+  },
+  "works": {
+    "tinaLabel": "Works",
+    "defaultValue": "Works"
+  },
+  "relatedOrganizations": {
+    "tinaLabel": "Related Organizations",
+    "defaultValue": "Related Organizations"
+  },
+  "relatedOrganizationsEmpty": {
+    "tinaLabel": "No related organizations",
+    "defaultValue": "No related organizations"
+  },
+  "relatedPeople": {
+    "tinaLabel": "Related People",
+    "defaultValue": "Related People"
+  },
+  "relatedPeopleEmpty": {
+    "tinaLabel": "No related people",
+    "defaultValue": "No related people"
+  },
+  "relatedPlaces": {
+    "tinaLabel": "Related Places",
+    "defaultValue": "Related Places"
+  },
+  "relatedPlacesEmpty": {
+    "tinaLabel": "No related places",
+    "defaultValue": "No related places"
+  },
+  "relatedTaxonomies": {
+    "tinaLabel": "Related Taxonomies",
+    "defaultValue": "Related Taxonomies"
+  },
+  "relatedTaxonomiesEmpty": {
+    "tinaLabel": "No related taxonomies",
+    "defaultValue": "No related taxonomies"
+  },
+  "loadMore": {
+    "tinaLabel": "Load More",
+    "defaultValue": "Load More"
+  },
+  "none": {
+    "tinaLabel": "None",
+    "defaultValue": "None"
+  },
+  "baseLayers": {
+    "tinaLabel": "Base Layers",
+    "defaultValue": "Base Layers"
+  },
+  "overlays": {
+    "tinaLabel": "Overlays",
+    "defaultValue": "Overlays"
+  },
+  "aboutProject": {
+    "tinaLabel": "About the Project",
+    "defaultValue": "About the Project"
+  },
+  "startTour": {
+    "tinaLabel": "Start the Tour",
+    "defaultValue": "Start the Tour"
+  },
+  "readMore": {
+    "tinaLabel": "Read More",
+    "defaultValue": "Read More"
+  },
+  "footerText": {
+    "tinaLabel": "(footer text)",
+    "defaultValue": ""
+  },
+  "copyright": {
+    "tinaLabel": "Copyright",
+    "defaultValue": "©{{year}} {{name}}. All rights reserved."
+  },
+  "coreDataLogin": {
+    "tinaLabel": "Log in to Core Data",
+    "defaultValue": "Log into Core Data"
+  },
+  "tinaLogin": {
+    "tinaLabel": "Log in to Tina CMS",
+    "defaultValue": "Log in to Tina CMS"
+  },
+  "andCountMore": {
+    "tinaLabel": "and <count> more",
+    "defaultValue": "and {{count}} more"
+  },
+  "resultsCount": {
+    "tinaLabel": "<count> results for <query>",
+    "defaultValue": "{{count}} results for {{query}}"
+  },
+  "resultsCountSingular": {
+    "tinaLabel": "1 result for <query>",
+    "defaultValue": "1 result for {{query}}"
+  },
+  "ofResults": {
+    "tinaLabel": "< start >-< end > of < total > result(s)",
+    "defaultValue": "{{start}}-{{end}} of {{total}} result(s)"
+  },
+  "filters": {
+    "tinaLabel": "Filters",
+    "defaultValue": "Filters"
+  },
+  "filterMapBounds": {
+    "tinaLabel": "Filter by map bounds",
+    "defaultValue": "Filter by map bounds"
+  },
+  "plusCount": {
+    "tinaLabel": "+ <count>",
+    "defaultValue": "+{{count}}"
+  },
+  "title": {
+    "tinaLabel": "Name",
+    "defaultValue": "Name"
+  },
+  "root": {
+    "tinaLabel": "Root",
+    "defaultValue": "Places"
+  },
+  "owner_project": {
+    "tinaLabel": "Owner Project",
+    "defaultValue": "Owner Project"
+  },
+  "all_projects": {
+    "tinaLabel": "All Projects",
+    "defaultValue": "All Projects"
+  },
+  "owner_project_id": {
+    "tinaLabel": "Owner Project -> ID",
+    "defaultValue": "Owner Project"
+  },
+  "all_projects_id": {
+    "tinaLabel": "All Projects -> ID",
+    "defaultValue": "All Projects"
+  },
+  "owner_project_name": {
+    "tinaLabel": "Owner Project -> Name",
+    "defaultValue": "Owner Project"
+  },
+  "all_projects_name": {
+    "tinaLabel": "All Projects -> Name",
+    "defaultValue": "All Projects"
+  },
+  "event_range": {
+    "tinaLabel": "Event Range",
+    "defaultValue": "Event Range"
+  },
+  "name": {
+    "tinaLabel": "Name",
+    "defaultValue": "Name"
+  },
+  "names": {
+    "tinaLabel": "Names",
+    "defaultValue": "Names"
+  },
+  "id": {
+    "tinaLabel": "ID",
+    "defaultValue": "ID"
+  },
+  "start_date": {
+    "tinaLabel": "Start Date",
+    "defaultValue": "Start Date"
+  },
+  "end_date": {
+    "tinaLabel": "End Date",
+    "defaultValue": "End Date"
+  },
+  "start_year": {
+    "tinaLabel": "Start Year",
+    "defaultValue": "Start Year"
+  },
+  "end_year": {
+    "tinaLabel": "End Year",
+    "defaultValue": "End Year"
+  },
+  "date": {
+    "tinaLabel": "Date",
+    "defaultValue": "Date"
+  },
+  "showMore": {
+    "tinaLabel": "Show More",
+    "defaultValue": "show more"
+  },
+  "showLess": {
+    "tinaLabel": "Show Less",
+    "defaultValue": "show less"
+  },
+  "reset": {
+    "tinaLabel": "Reset",
+    "defaultValue": "Reset"
+  },
+  "facetLabel": {
+    "tinaLabel": "Facet label",
+    "defaultValue": "{{relationship}}: {{field}}"
+  },
+  "list": {
+    "tinaLabel": "List",
+    "defaultValue": "List"
+  },
+  "table": {
+    "tinaLabel": "Table",
+    "defaultValue": "Table"
+  },
+  "map": {
+    "tinaLabel": "Map",
+    "defaultValue": "Map"
+  },
+  "timeline": {
+    "tinaLabel": "Timeline",
+    "defaultValue": "Timeline"
+  },
+  "relatedMedia": {
+    "tinaLabel": "Related Media",
+    "defaultValue": "Media ({{count}})"
+  },
+  "relatedMediaItem": {
+    "tinaLabel": "Related Media Item",
+    "defaultValue": "{{name}} ({{count}})"
+  },
+  "selectRecord": {
+    "tinaLabel": "Select {{name}}",
+    "defaultValue": "Select {{name}}"
+  },
+  "event": {
+    "tinaLabel": "Event",
+    "defaultValue": "Event"
+  },
+  "instance": {
+    "tinaLabel": "Instance",
+    "defaultValue": "Instance"
+  },
+  "item": {
+    "tinaLabel": "Item",
+    "defaultValue": "Item"
+  },
+  "media": {
+    "tinaLabel": "Media",
+    "defaultValue": "Media"
+  },
+  "organization": {
+    "tinaLabel": "Organization",
+    "defaultValue": "Organization"
+  },
+  "person": {
+    "tinaLabel": "Person",
+    "defaultValue": "Person"
+  },
+  "place": {
+    "tinaLabel": "Place",
+    "defaultValue": "Place"
+  },
+  "work": {
+    "tinaLabel": "Work",
+    "defaultValue": "Work"
+  },
+  "export": {
+    "tinaLabel": "Export",
+    "defaultValue": "Export"
+  },
+  "json": {
+    "tinaLabel": "JSON",
+    "defaultValue": "JSON"
+  },
+  "multipleLocations": {
+    "tinaLabel": "Multiple locations",
+    "defaultValue": "Multiple locations"
+  },
+  "termsConditions": {
+    "tinaLabel": "Terms and Conditions",
+    "defaultValue": "Terms & Conditions"
+  },
+  "privacyPolicy": {
+    "tinaLabel": "Privacy Policy",
+    "defaultValue": "Privacy Policy"
+  },
+  "accessibility": {
+    "tinaLabel": "Accessibility",
+    "defaultValue": "Accessibility"
+  },
+  "save": {
+    "tinaLabel": "Save",
+    "defaultValue": "Save"
+  },
+  "search": {
+    "tinaLabel": "Search",
+    "defaultValue": "Search"
+  },
+  "saveSearch": {
+    "tinaLabel": "Save Search",
+    "defaultValue": "Save Search"
+  },
+  "savedSearchName": {
+    "tinaLabel": "Saved Search Name",
+    "defaultValue": "Saved Search Name"
+  },
+  "savedSearches": {
+    "tinaLabel": "Saved Searches",
+    "defaultValue": "Saved Searches"
+  },
+  "clearAll": {
+    "tinaLabel": "Clear All",
+    "defaultValue": "Clear All"
+  },
+  "createdOn": {
+    "tinaLabel": "Created on <datetime>",
+    "defaultValue": "Created on {{date}}"
+  },
+  "view": {
+    "tinaLabel": "View",
+    "defaultValue": "View"
+  },
+  "remove": {
+    "tinaLabel": "Remove",
+    "defaultValue": "Remove"
+  },
+  "share": {
+    "tinaLabel": "Share",
+    "defaultValue": "Share"
+  },
+  "clipboardCopyHeader": {
+    "tinaLabel": "Copied to Clipboard (Header)",
+    "defaultValue": "Copied to Clipboard"
+  },
+  "clipboardCopyContent": {
+    "tinaLabel": "Copied to Clipboard (Content)",
+    "defaultValue": "The URL to share has been copied to your clipboard."
+  },
+  "saveSearchHeader": {
+    "tinaLabel": "Saved Search (Header)",
+    "defaultValue": "Saved Search"
+  },
+  "saveSearchContent": {
+    "tinaLabel": "Saved Search (Content)",
+    "defaultValue": "Your search has been saved. Navigate to the \"Saved\" list to view your saved search."
+  },
+  "webAuthorities": {
+    "tinaLabel": "Web Authorities",
+    "defaultValue": "Web Authorities"
+  },
+  "sortBy": {
+    "tinaLabel": "Sort by:",
+    "defaultValue": "Sort by:"
+  },
+  "relevance": {
+    "tinaLabel": "Relevance",
+    "defaultValue": "Relevance"
+  },
+  "A-Z": {
+    "tinaLabel": "A-Z",
+    "defaultValue": "A-Z"
+  },
+  "Z-A": {
+    "tinaLabel": "Z-A",
+    "defaultValue": "Z-A"
+  },
+  "imageGalleries": {
+    "tinaLabel": "Image Galleries",
+    "defaultValue": "Image Galleries"
+  },
+  "gallery": {
+    "tinaLabel": "Gallery",
+    "defaultValue": "Gallery"
+  },
+  "viewAllImages": {
+    "tinaLabel": "View All Images",
+    "defaultValue": "View All Images"
+  },
+  "sensitiveContentConfirmation": {
+    "tinaLabel": "This gallery contains sensitive content. Are you sure you want to view it?",
+    "defaultValue": "This gallery contains sensitive content. Are you sure you want to view it?"
+  },
+  "yes": {
+    "tinaLabel": "Yes",
+    "defaultValue": "Yes"
+  },
+  "no": {
+    "tinaLabel": "No",
+    "defaultValue": "No"
+  },
+  "filterResultsBy": {
+    "tinaLabel": "Filter Results by:",
+    "defaultValue": "Filter Results by:"
+},
+  "allPosts": {
+    "tinaLabel": "All Posts",
+    "defaultValue": "All Posts"
+  },
+  "embedRenderError": {
+    "tinaLabel": "Post embed render error message",
+    "defaultValue": "This content could not be displayed."
+  },
+  "embedRenderErrorEditing": {
+    "tinaLabel": "Post embed render error message (visual editor)",
+    "defaultValue": "This content could not be previewed. Your edits are safe — the preview will refresh as you keep editing."
+  },
+  "contactForm.name": {
+    "tinaLabel": "Contact Form > Name",
+    "defaultValue": "Name"
+  },
+  "contactForm.email": {
+    "tinaLabel": "Contact Form > Email",
+    "defaultValue": "Email"
+  },
+  "contactForm.organization": {
+    "tinaLabel": "Contact Form > Affiliated Organization",
+    "defaultValue": "Affiliated Organization"
+  },
+  "contactForm.message": {
+    "tinaLabel": "Contact Form > Message",
+    "defaultValue": "Message"
+  },
+  "contactForm.send": {
+    "tinaLabel": "Contact Form > Send",
+    "defaultValue": "Send"
+  },
+  "contactFormSubmitted.header": {
+    "tinaLabel": "Contact Form Submitted > Header",
+    "defaultValue": "Thank you for getting in touch!"
+  },
+  "contactFormSubmitted.content": {
+    "tinaLabel": "Contact Form Submitted > Content",
+    "defaultValue": "We appreciate you contacting us. One of our colleagues will get back in touch with you soon! Have a great day!"
+  },
+  "tags": {
+    "tinaLabel": "Tags",
+    "defaultValue": "Tags"
+  }
+}

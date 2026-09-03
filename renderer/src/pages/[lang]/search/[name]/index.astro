@@ -1,0 +1,54 @@
+---
+import ListSearch from '@apps/search/list/ListSearch';
+import MapSearch from '@apps/search/map/MapSearch';
+import { getAtlasConfig } from '@atlas/server';
+import config from '@config';
+import Layout from '@layouts/Layout.astro';
+import { SearchConfig } from '@types';
+import { PRELOAD_MAP, STATIC_BUILD } from 'astro:env/client';
+import _ from 'underscore';
+
+const { lang, name } = Astro.params;
+
+// The search list is resolved per request from the current atlas's config
+// (the client search island re-reads it from the dynamic /config.json).
+const searchConfig = getAtlasConfig().search?.find((s) => s.name === name) as SearchConfig;
+const isListSearch = !!searchConfig?.type && searchConfig.type !== 'map';
+
+export const getStaticPaths = () => {
+  const paths = [];
+
+  _.each(config.i18n.locales, (lang) => {
+    _.each(config.search, ({name}) => {
+      paths.push({params: {lang, name}});
+    });
+  });
+
+  return paths;
+};
+
+---
+
+<Layout
+  fullscreen
+  titleKey='explore'
+>
+  {isListSearch
+    ? (
+      <ListSearch
+        lang={lang}
+        name={name}
+        client:only='react'
+      />
+    )
+    : (
+      <MapSearch
+        allowSave={!STATIC_BUILD}
+        lang={lang}
+        name={name}
+        preload={PRELOAD_MAP}
+        client:only='react'
+      />
+    )
+  }
+</Layout>

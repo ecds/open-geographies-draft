@@ -1,0 +1,45 @@
+---
+import Path from '@apps/paths/Path.astro';
+import { fetchPaths } from '@backend/tina';
+import config from '@config';
+import Layout from "@layouts/Layout.astro";
+import { hasPathsContent } from '@utils/config';
+import _ from 'underscore';
+
+const { slug } = Astro.params;
+
+export const getStaticPaths = async () => {
+  if (!hasPathsContent(config)) {
+    return [];
+  }
+
+  const staticPaths = [];
+
+  const locales = config.i18n.locales;
+  const paths = await fetchPaths({
+    published: { eq: true }
+  });
+
+  _.each(locales, (lang) => {
+    _.each(paths, (path) => {
+      staticPaths.push({ params: {
+        lang,
+        slug: path?._sys.filename
+      }})
+    });
+  });
+
+  return staticPaths;
+};
+
+---
+
+<Layout
+  fullscreen
+>
+  <Path
+    slug={slug}
+    publishedOnly={true}
+    server:defer
+  />
+</Layout>

@@ -1,0 +1,28 @@
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/tina/*"
+  to = "/.netlify/functions/tina"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/s3/*"
+  to = "/.netlify/functions/tina"
+  status = 200
+  force = true
+
+[dev]
+  command = "npm start"
+  targetPort = 4321
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22.13.0"
+  # TinaCMS content indexing (in `tinacms build`) and `astro build` both grow
+  # with content volume; on larger content repos they hit Node's ~2 GB default
+  # heap limit. Raise it so those steps don't OOM (V8 OOMs with "JavaScript heap out of memory", exit 134).
+  NODE_OPTIONS = "--max-old-space-size=4096"

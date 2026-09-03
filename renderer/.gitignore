@@ -1,0 +1,56 @@
+# build output
+dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+node_modules
+
+# Local Netlify folder
+.netlify
+
+# Ignore user-defined fields and search JSON
+/src/i18n/userDefinedFields.json
+/src/i18n/descriptorOptions.json
+/src/i18n/search.json
+
+# Temporary directory
+tmp/
+
+# TinaCMS content
+/content/
+
+# Development config
+/public/config.dev*.json
+
+# Workspaces
+*.code-workspace
+
+/src/components/custom/project/*
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+.gstack/
