@@ -18,8 +18,12 @@ The platform-side code is included as snapshots so it can be read alongside the 
   Renders any atlas by slug at request time; includes the in-progress Elasticsearch/Searchkit
   search path alongside the original Typesense one.
 
-These are working-tree snapshots, not the repositories' histories; they will move to their own
-repositories once the code stabilizes.
+- `connector-patches/` — four small, general patches to the connector itself (not the engine),
+  exported as `.patch` files with a README. Two of them are hard dependencies of the engine's
+  public atlas API; with the standalone connector deprecated upstream, they need re-homing.
+
+The engine and renderer are working-tree snapshots, not the repositories' histories; they will
+move to their own repositories once the code stabilizes.
 
 ## Start here
 

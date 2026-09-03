@@ -1,0 +1,76 @@
+From 84296fa177189f6f344a5987c071eb73e042706b Mon Sep 17 00:00:00 2001
+From: terminusfilms <steve@terminusfilms.com>
+Date: Fri, 12 Jun 2026 21:11:18 -0400
+Subject: [PATCH 3/4] Search: flatten GeometryCollections so places render on
+ result maps
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+GeometryCollections are valid GeoJSON, but map clients (MapLibre cluster
+sources in particular) silently drop them, so places stored that way — a
+common KML-import artifact: a Point plus decorative paths — index fine
+yet never render on the search map.
+
+Normalize at index time: prefer a Point member, fall back to a lone
+member, and leave anything else (and all non-collections) untouched.
+
+---
+ .../search/geometry_normalizer.rb             | 25 +++++++++++++++++++
+ .../core_data_connector/search/place.rb       |  4 ++-
+ 2 files changed, 28 insertions(+), 1 deletion(-)
+ create mode 100644 app/services/core_data_connector/search/geometry_normalizer.rb
+
+diff --git a/app/services/core_data_connector/search/geometry_normalizer.rb b/app/services/core_data_connector/search/geometry_normalizer.rb
+new file mode 100644
+index 0000000..c3e2f70
+--- /dev/null
++++ b/app/services/core_data_connector/search/geometry_normalizer.rb
+@@ -0,0 +1,25 @@
++module CoreDataConnector
++  module Search
++    # Helpers for normalizing GeoJSON before it enters the search index.
++    module GeometryNormalizer
++      # GeometryCollections are valid GeoJSON, but map clients (MapLibre
++      # cluster sources in particular) silently drop them, so records stored
++      # that way (a common KML-import artifact: a Point plus decorative paths)
++      # never render on the search map. Prefer a Point member, fall back to a
++      # lone member, and leave anything else alone.
++      def self.flatten_collection(geojson)
++        return geojson unless geojson.is_a?(Hash)
++
++        normalized = geojson.deep_stringify_keys
++        return geojson unless normalized['type'] == 'GeometryCollection'
++
++        members = normalized['geometries'] || []
++
++        replacement = members.find { |geometry| geometry['type'] == 'Point' }
++        replacement ||= members.first if members.size == 1
++
++        replacement || geojson
++      end
++    end
++  end
++end
+diff --git a/app/services/core_data_connector/search/place.rb b/app/services/core_data_connector/search/place.rb
+index a71c3ac..cf48192 100644
+--- a/app/services/core_data_connector/search/place.rb
++++ b/app/services/core_data_connector/search/place.rb
+@@ -25,11 +25,13 @@ module CoreDataConnector
+         end
+ 
+         search_attribute(:geometry) do |options|
+-          if options[:polygons] && self.respond_to?(:simplified_geometry) && simplified_geometry.present?
++          geojson = if options[:polygons] && self.respond_to?(:simplified_geometry) && simplified_geometry.present?
+             Geometry.to_geojson(self.simplified_geometry)
+           elsif self.respond_to?(:geometry_center) && geometry_center.present?
+             Geometry.to_geojson(geometry_center)
+           end
++
++          Search::GeometryNormalizer.flatten_collection(geojson)
+         end
+ 
+         search_attribute(:properties) do
+-- 
+2.49.0
+

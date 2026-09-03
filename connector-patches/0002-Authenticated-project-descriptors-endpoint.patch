@@ -1,0 +1,237 @@
+From 2c7f627082bbd002361f848a899518a22b14a1b6 Mon Sep 17 00:00:00 2001
+From: terminusfilms <steve@terminusfilms.com>
+Date: Fri, 12 Jun 2026 16:48:42 -0400
+Subject: [PATCH 2/4] Authenticated project descriptors endpoint
+
+The site/search configuration console introspects a project's models,
+relationships, and fields through the descriptors document. That was only
+available on the public API, which now serves discoverable projects
+exclusively - but sites are configured before a project is made
+discoverable.
+
+Extracts descriptor building into a Descriptors service and adds an
+authenticated GET /core_data/projects/:id/descriptors (project show?
+policy). The public v1 endpoint emits the same document via the service.
+
+---
+ .../projects_controller.rb                    | 14 +++
+ .../public/v1/projects_controller.rb          | 70 +--------------
+ .../core_data_connector/descriptors.rb        | 85 +++++++++++++++++++
+ config/routes/admin.rb                        |  1 +
+ 4 files changed, 102 insertions(+), 68 deletions(-)
+ create mode 100644 app/services/core_data_connector/descriptors.rb
+
+diff --git a/app/controllers/core_data_connector/projects_controller.rb b/app/controllers/core_data_connector/projects_controller.rb
+index 900c09d..0e611a9 100644
+--- a/app/controllers/core_data_connector/projects_controller.rb
++++ b/app/controllers/core_data_connector/projects_controller.rb
+@@ -27,6 +27,20 @@ module CoreDataConnector
+       end
+     end
+ 
++    # GET /core_data/projects/:id/descriptors
++    #
++    # The project's models, relationships, and user-defined fields, for
++    # configuration pick-lists (site editor, search collections). Same
++    # document as the public descriptors endpoint, but authenticated — the
++    # public endpoint only serves discoverable projects, while sites are
++    # configured before a project is made discoverable.
++    def descriptors
++      project = Project.find(params[:id])
++      authorize project, :show?
++
++      render json: { descriptors: Descriptors.new(project.id).all }, status: :ok
++    end
++
+     def clear
+       project = Project.find(params[:id])
+       authorize project
+diff --git a/app/controllers/core_data_connector/public/v1/projects_controller.rb b/app/controllers/core_data_connector/public/v1/projects_controller.rb
+index 381292f..aab7b47 100644
+--- a/app/controllers/core_data_connector/public/v1/projects_controller.rb
++++ b/app/controllers/core_data_connector/public/v1/projects_controller.rb
+@@ -8,75 +8,9 @@ module CoreDataConnector
+         def descriptors
+           return head :not_found unless Project.exists?(id: params[:id], discoverable: true)
+ 
+-          descriptors = []
+-          descriptors += load_project_models
+-          descriptors += load_project_model_relationships
+-
+-          render json: { descriptors: descriptors}, status: :ok
+-        end
+-
+-        private
+-
+-        def load_project_model_relationships
+-          descriptors = []
+-
+-          query = ProjectModelRelationship
+-                    .preload(:user_defined_fields, :primary_model)
+-                    .joins(:primary_model)
+-                    .where(primary_model: {
+-                      project_id: params[:id]
+-                    })
+-
+-          query.find_each do |project_model_relationship|
+-            descriptor = {
+-              identifier: project_model_relationship.uuid,
+-              label: project_model_relationship.name,
+-              context: project_model_relationship.primary_model.name
+-            }
+-
+-            if project_model_relationship.allow_inverse?
+-              descriptor[:inverse_label] = project_model_relationship.inverse_name
+-            end
+-
+-            descriptors << descriptor
+-
+-              project_model_relationship.user_defined_fields.each do |user_defined_field|
+-              descriptors << {
+-                identifier: user_defined_field.uuid,
+-                label: user_defined_field.column_name,
+-                context: project_model_relationship.name
+-              }
+-            end
+-          end
+-
+-          descriptors
+-        end
+-
+-        def load_project_models
+-          descriptors = []
+-
+-          query = ProjectModel
+-                    .preload(:user_defined_fields)
+-                    .where(project_id: params[:id])
+-
+-          query.find_each do |project_model|
+-            descriptors << {
+-              identifier: project_model.uuid,
+-              label: project_model.name
+-            }
+-
+-            project_model.user_defined_fields.each do |user_defined_field|
+-              descriptors << {
+-                identifier: user_defined_field.uuid,
+-                label: user_defined_field.column_name,
+-                context: project_model.name
+-              }
+-            end
+-          end
+-
+-          descriptors
++          render json: { descriptors: Descriptors.new(params[:id]).all }, status: :ok
+         end
+       end
+     end
+   end
+-end
+\ No newline at end of file
++end
+diff --git a/app/services/core_data_connector/descriptors.rb b/app/services/core_data_connector/descriptors.rb
+new file mode 100644
+index 0000000..c0b7653
+--- /dev/null
++++ b/app/services/core_data_connector/descriptors.rb
+@@ -0,0 +1,85 @@
++module CoreDataConnector
++  # Builds the descriptor list for a project: its models, relationships, and
++  # user-defined fields, with stable identifiers (UUIDs) and display labels.
++  # Consumed by site/frontend configuration tooling to offer pick-lists
++  # instead of free-typed UUIDs.
++  class Descriptors
++    attr_reader :project_id
++
++    def initialize(project_id)
++      @project_id = project_id
++    end
++
++    def all
++      project_models + project_model_relationships
++    end
++
++    private
++
++    def project_models
++      descriptors = []
++
++      query = ProjectModel
++                .preload(:user_defined_fields)
++                .where(project_id:)
++
++      query.find_each do |project_model|
++        descriptors << {
++          identifier: project_model.uuid,
++          label: project_model.name,
++          kind: 'model'
++        }
++
++        project_model.user_defined_fields.each do |user_defined_field|
++          descriptors << {
++            identifier: user_defined_field.uuid,
++            label: user_defined_field.column_name,
++            context: project_model.name,
++            kind: 'field',
++            data_type: user_defined_field.data_type
++          }
++        end
++      end
++
++      descriptors
++    end
++
++    def project_model_relationships
++      descriptors = []
++
++      query = ProjectModelRelationship
++                .preload(:user_defined_fields, :primary_model)
++                .joins(:primary_model)
++                .where(primary_model: {
++                  project_id:
++                })
++
++      query.find_each do |project_model_relationship|
++        descriptor = {
++          identifier: project_model_relationship.uuid,
++          label: project_model_relationship.name,
++          context: project_model_relationship.primary_model.name,
++          kind: 'relationship'
++        }
++
++        if project_model_relationship.allow_inverse?
++          descriptor[:inverse_label] = project_model_relationship.inverse_name
++        end
++
++        descriptors << descriptor
++
++        project_model_relationship.user_defined_fields.each do |user_defined_field|
++          descriptors << {
++            identifier: user_defined_field.uuid,
++            label: user_defined_field.column_name,
++            context: project_model_relationship.name,
++            kind: 'field',
++            data_type: user_defined_field.data_type
++          }
++        end
++      end
++
++      descriptors
++    end
++  end
++end
+diff --git a/config/routes/admin.rb b/config/routes/admin.rb
+index c2d620b..149159d 100644
+--- a/config/routes/admin.rb
++++ b/config/routes/admin.rb
+@@ -38,6 +38,7 @@ resources :project_model_accesses, only: :index
+ resources :projects do
+   post :analyze_import, on: :member
+   post :clear, on: :member
++  get :descriptors, on: :member
+   get :export_configuration, on: :member
+   get :export_data, on: :member
+   get :export_variables, on: :member
+-- 
+2.49.0
+

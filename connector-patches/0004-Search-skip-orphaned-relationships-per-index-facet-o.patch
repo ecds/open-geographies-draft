@@ -1,0 +1,149 @@
+From 9efa1f9fc3797cdacfb7133d3bb71bcc46f60bc2 Mon Sep 17 00:00:00 2001
+From: terminusfilms <steve@terminusfilms.com>
+Date: Mon, 15 Jun 2026 21:59:01 -0400
+Subject: [PATCH 4/4] Search: skip orphaned relationships + per-index facet
+ opt-in
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Indexing a relationship whose primary/related record was deleted crashed the
+whole run with NoMethodError on nil; skip orphaned rows with a warning instead.
+Also thread an optional facet_field_uuids list through the index options so a
+deployment can opt any user-defined field into faceting, regardless of data type.
+
+General hardening + capability, no Open Geographies coupling — offered upstream;
+carried on this mirror meanwhile.
+
+---
+ .../core_data_connector/search/base.rb        | 39 +++++++++++++++----
+ 1 file changed, 32 insertions(+), 7 deletions(-)
+
+diff --git a/app/services/core_data_connector/search/base.rb b/app/services/core_data_connector/search/base.rb
+index 02f0412..470a637 100644
+--- a/app/services/core_data_connector/search/base.rb
++++ b/app/services/core_data_connector/search/base.rb
+@@ -338,7 +338,7 @@ module CoreDataConnector
+           end
+ 
+           # Add user-defined fields
+-          user_defined_fields = build_user_defined(self, project_model.user_defined_fields)
++          user_defined_fields = build_user_defined(self, project_model.user_defined_fields, options)
+           hash.merge!(user_defined_fields)
+ 
+           projects = []
+@@ -412,13 +412,15 @@ module CoreDataConnector
+         end
+ 
+         def build_inverse_place_relationship(relationship, hash, projects, options)
++          return log_orphaned_relationship(relationship) if relationship.inverse_related_place_with_search_geometry.nil?
++
+           project_model_relationship = relationship.project_model_relationship
+           key = project_model_relationship.uuid
+ 
+           # Add the related model project to the list of projects
+           add_project(projects, project_model_relationship.related_model.project)
+ 
+-          user_defined = build_user_defined(relationship, project_model_relationship.user_defined_fields)
++          user_defined = build_user_defined(relationship, project_model_relationship.user_defined_fields, options)
+ 
+           hash[key] ||= []
+ 
+@@ -430,13 +432,15 @@ module CoreDataConnector
+         end
+ 
+         def build_inverse_relationship(relationship, hash, projects, options)
++          return log_orphaned_relationship(relationship) if relationship.primary_record.nil?
++
+           project_model_relationship = relationship.project_model_relationship
+           key = project_model_relationship.uuid
+ 
+           # Add the related model project to the list of projects
+           add_project(projects, project_model_relationship.related_model.project)
+ 
+-          user_defined = build_user_defined(relationship, project_model_relationship.user_defined_fields)
++          user_defined = build_user_defined(relationship, project_model_relationship.user_defined_fields, options)
+ 
+           hash[key] ||= []
+ 
+@@ -448,13 +452,15 @@ module CoreDataConnector
+         end
+ 
+         def build_place_relationship(relationship, hash, projects, options)
++          return log_orphaned_relationship(relationship) if relationship.related_place_with_search_geometry.nil?
++
+           project_model_relationship = relationship.project_model_relationship
+           key = project_model_relationship.uuid
+ 
+           # Add the primary model project to the list of projects
+           add_project(projects, project_model_relationship.primary_model.project)
+ 
+-          user_defined = build_user_defined(relationship, project_model_relationship.user_defined_fields)
++          user_defined = build_user_defined(relationship, project_model_relationship.user_defined_fields, options)
+ 
+           hash[key] ||= []
+ 
+@@ -466,13 +472,15 @@ module CoreDataConnector
+         end
+ 
+         def build_relationship(relationship, hash, projects, options)
++          return log_orphaned_relationship(relationship) if relationship.related_record.nil?
++
+           project_model_relationship = relationship.project_model_relationship
+           key = project_model_relationship.uuid
+ 
+           # Add the primary model project to the list of projects
+           add_project(projects, project_model_relationship.primary_model.project)
+ 
+-          user_defined = build_user_defined(relationship, project_model_relationship.user_defined_fields)
++          user_defined = build_user_defined(relationship, project_model_relationship.user_defined_fields, options)
+ 
+           hash[key] ||= []
+ 
+@@ -483,6 +491,17 @@ module CoreDataConnector
+                          .merge({ inverse: false })
+         end
+ 
++        # A relationship row whose primary/related record has been deleted would
++        # otherwise crash the entire index run with a NoMethodError on nil.
++        # Skip it and leave a trace for cleanup.
++        def log_orphaned_relationship(relationship)
++          Rails.logger.warn(
++            "[search] skipping orphaned relationship #{relationship.id} while indexing #{self.class.name}##{id}"
++          )
++
++          nil
++        end
++
+         def build_relationships(hash, projects, options)
+           event_relationships.each { |r| build_relationship(r, hash, projects, options) }
+           instance_relationships.each { |r| build_relationship(r, hash, projects, options) }
+@@ -521,9 +540,15 @@ module CoreDataConnector
+           end
+         end
+ 
+-        def build_user_defined(record, user_defined_fields)
++        def build_user_defined(record, user_defined_fields, options = {})
+           hash = {}
+ 
++          # Fields explicitly opted into faceting for this index, regardless of
++          # data type. Facet selection is a publishing choice (which fields a
++          # site lets users filter by), so it travels with the indexing options
++          # rather than the shared field definition.
++          opt_in_uuids = Array(options[:facet_field_uuids])
++
+           user_defined_fields.each do |field|
+             next unless record.user_defined
+ 
+@@ -533,7 +558,7 @@ module CoreDataConnector
+             key = field.uuid
+             hash[key] = value
+ 
+-            facet = %(Date Number Select Boolean).include?(field.data_type)
++            facet = %(Date Number Select Boolean).include?(field.data_type) || opt_in_uuids.include?(field.uuid)
+             hash["#{key}_facet"] = value if facet
+           end
+ 
+-- 
+2.49.0
+
