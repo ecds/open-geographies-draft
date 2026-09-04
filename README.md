@@ -8,22 +8,19 @@ be read alongside the lower-layer engine,
 [`ecds/core-data-connector-open-geographies`](https://github.com/ecds/core-data-connector-open-geographies/tree/v1)
 (branch `v1`).
 
-The platform-side code is included as snapshots so it can be read alongside the documents:
+The platform-side code lives in its own repositories in this organization:
 
-- `engine/` — the `open_geographies` Rails engine (the upper layer: wizard backend, provisioning,
-  Site config/branding/navigation, authority imports, the by-slug public atlas API). Installs
-  onto unmodified Core Data / FairData and depends on the lower-layer engine above.
-- `renderer/` — the shared multi-tenant SSR renderer, a fork of Performant Software's
-  [`core-data-places`](https://github.com/performant-software/core-data-places) (Astro + Node).
-  Renders any atlas by slug at request time; includes the in-progress Elasticsearch/Searchkit
-  search path alongside the original Typesense one.
+- [`ecds/open-geographies-engine`](https://github.com/ecds/open-geographies-engine) — the
+  `open_geographies` Rails engine (the upper layer: wizard backend, provisioning, Site
+  config/branding/navigation, authority imports, the by-slug public atlas API). Mounts on
+  Core Data / FairData and depends on the lower-layer engine above.
+- [`ecds/core-data-places`](https://github.com/ecds/core-data-places) — the shared multi-tenant
+  SSR renderer, a fork of Performant Software's
+  [`core-data-places`](https://github.com/performant-software/core-data-places) (Astro + Node)
+  with full upstream history. Renders any atlas by slug at request time; the Elasticsearch/
+  Searchkit search path is in progress.
 
-- `connector-patches/` — four small, general patches to the connector itself (not the engine),
-  exported as `.patch` files with a README. Two of them are hard dependencies of the engine's
-  public atlas API; with the standalone connector deprecated upstream, they need re-homing.
-
-The engine and renderer are working-tree snapshots, not the repositories' histories; they will
-move to their own repositories once the code stabilizes.
+This repository holds the design documents, the schema mirror, and the connector patches.
 
 ## Start here
 
