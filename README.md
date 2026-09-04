@@ -28,7 +28,9 @@ This repository holds the design documents, the schema mirror, and the connector
   `es_mapping.json` (index layer), and a README with a worked example. The engine carries the
   authoritative copy at
   [`lib/core_data_connector_open_geographies/v1/`](https://github.com/ecds/core-data-connector-open-geographies/tree/v1/lib/core_data_connector_open_geographies/v1);
-  this is a mirror.
+  this copy is the platform side's working version (v0.2.1-draft) — it carries proposals not
+  yet applied to the engine's copy (notably the `preview` → `preview_media` promote rename) and
+  is reconciled with the engine's copy at each template convergence, never merged independently.
 - `OG_CANONICAL_SCHEMA_updated.md` — the prose schema spec (envelope, per-atlas fields,
   Place / Media / Work / Map Layer, open questions).
 - `OG_SCHEMA_FIELD_METHOD.md` — how a model's fields are derived (GCA ∩ schema.org, validated
